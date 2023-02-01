@@ -2,8 +2,6 @@
 
 public partial class MainPage : ContentPage
 {
-	int count = 0;
-
 	public MainPage()
 	{
 		InitializeComponent();
@@ -11,14 +9,15 @@ public partial class MainPage : ContentPage
 
 	private void OnCounterClicked(object sender, EventArgs e)
 	{
-		count++;
+        Window window = this.Window;
 
-		if (count == 1)
-			CounterBtn.Text = $"Clicked {count} time";
-		else
-			CounterBtn.Text = $"Clicked {count} times";
+        ReconnectingWindowOverlay windowOverlay = new(window);
+        ReconnectingWindowOverlayElement overlayElement = new();
 
-		SemanticScreenReader.Announce(CounterBtn.Text);
-	}
+        if (!windowOverlay.AddWindowElement(overlayElement))
+            throw new Exception("Failed to add window element to the window overlay.");
+
+        if (!window.AddOverlay(windowOverlay))
+            throw new Exception("Failed to show the window overlay.");
+    }
 }
-
